@@ -1,0 +1,96 @@
+-- Table: public.category
+
+-- DROP TABLE IF EXISTS public.category;
+
+CREATE TABLE IF NOT EXISTS public.category
+(
+    id integer NOT NULL,
+    name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT category_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.category
+    OWNER to postgres;
+
+
+
+
+
+
+-- Table: public.documents
+
+-- DROP TABLE IF EXISTS public.documents;
+
+CREATE TABLE IF NOT EXISTS public.documents
+(
+    docnumber integer NOT NULL,
+    text character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    title character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    num_chars integer NOT NULL,
+    date date NOT NULL,
+    category_id integer NOT NULL,
+    CONSTRAINT documents_pkey PRIMARY KEY (docnumber),
+    CONSTRAINT category_id FOREIGN KEY (category_id)
+        REFERENCES public.category (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.documents
+    OWNER to postgres;
+
+
+
+
+
+
+-- Table: public.index
+
+-- DROP TABLE IF EXISTS public.index;
+
+CREATE TABLE IF NOT EXISTS public.index
+(
+    count integer NOT NULL,
+    docnumber integer NOT NULL,
+    term character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT term_count_pkey PRIMARY KEY (docnumber, term),
+    CONSTRAINT "docNumber" FOREIGN KEY (docnumber)
+        REFERENCES public.documents (docnumber) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT term FOREIGN KEY (term)
+        REFERENCES public.terms (term) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.index
+    OWNER to postgres;
+
+
+
+
+
+
+-- Table: public.terms
+
+-- DROP TABLE IF EXISTS public.terms;
+
+CREATE TABLE IF NOT EXISTS public.terms
+(
+    term character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    num_chars character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "Terms_pkey" PRIMARY KEY (term)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.terms
+    OWNER to postgres;
